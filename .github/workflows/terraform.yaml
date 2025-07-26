@@ -1,3 +1,5 @@
+name: Terraform AWS Deploy
+
 on:
   push:
     paths:
@@ -13,28 +15,25 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      id-token: write # Required for OIDC authentication JWT
-      contents: read # Required for checking out the repository
-      pull-requests: write # Required for PR checks
+      id-token: write
+      contents: read
 
+    env:
+      AWS_REGION: eu-west-2
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Already using v4, which is good
+        uses: actions/checkout@v4
 
       - name: Configure AWS credentials (OIDC)
-        # --- CHANGE HERE: Update to v4 ---
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: ${{ secrets.SECRETS_ROLE_TO_ASSUME }} # I have set this in the repository secrets
-          aws-region: us-east-01 # AWS region to use
-          role-session-name: GitHubActions # Name for the session
-          audience: sts.amazonaws.com # Audience for OIDC authentication
+          role-to-assume: arn:aws:iam::985539772673:role/satya-corp-oidc
+          role-session-name: satyacorp-oidc
+          aws-region: us-east-01
+          audience: sts.amazonaws.com
 
       - name: Setup Terraform
-        # --- CHANGE HERE: Ensure you're on the latest patch of v3, or consider v4 if available and compatible ---
-        # As of my last update, v3 is still the latest major for setup-terraform.
-        # Ensure your 'v3' tag pulls the latest patch.
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
@@ -53,7 +52,7 @@ jobs:
         run: terraform plan
         working-directory: terraform
 
-      - name: Terraform apply
+      - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
         working-directory: terraform
