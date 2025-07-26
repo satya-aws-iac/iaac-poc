@@ -59,9 +59,10 @@ resource "aws_s3_bucket_versioning" "tfstatebucket_versioning" {
 # Optional: Create a DynamoDB table for state locking
 # This prevents multiple users from concurrently modifying the state file, avoiding corruption.
 resource "aws_dynamodb_table" "terraform_state_lock" {
-  name         = "terraform-state-lock-msatyan" # IMPORTANT: Choose a unique name
-  billing_mode = "PAY_PER_REQUEST"              # Cost-effective for infrequent access
-  hash_key     = "LockID"                       # Required for state locking
+  name                        = "terraform-state-lock-msatyan"
+  billing_mode                = "PAY_PER_REQUEST"
+  hash_key                    = "LockID"
+  deletion_protection_enabled = "true"
 
   attribute {
     name = "LockID"
