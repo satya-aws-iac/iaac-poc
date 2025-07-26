@@ -27,7 +27,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.SECRETS_ROLE_TO_ASSUME }} # I have set this in the repository secrets
-          aws-region: eu-west-2 # AWS region to use
+          aws-region: us-east-01 # AWS region to use
           role-session-name: GitHubActions # Name for the session
           audience: sts.amazonaws.com # Audience for OIDC authentication
 
