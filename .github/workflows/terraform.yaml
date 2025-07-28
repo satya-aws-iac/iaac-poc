@@ -46,14 +46,16 @@ jobs:
         with:
           role-to-assume: ${{ secrets.SECRETS_ROLE_TO_ASSUME }}
           aws-region: us-east-1
-          role-session-name: GitHubActions-${{ matrix.tf_folder }} # Unique session name
+          # --- FIX IS HERE ---
+          role-session-name: GitHubActions-${{ replace(matrix.tf_folder, '/', '-') }} # Corrected: Replaced '/' with '-'
+          # --- END FIX ---
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ${{ matrix.tf_folder }} # <--- Uses the matrix variable
+        working-directory: ${{ matrix.tf_folder }}
 
       - name: Terraform Format
         run: terraform fmt -check
