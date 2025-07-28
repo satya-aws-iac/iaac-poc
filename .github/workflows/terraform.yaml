@@ -39,21 +39,21 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: AWS-IAAC/**'
+        working-directory: AWS-IAAC
 
       - name: Terraform Format
         run: terraform fmt -check
-        working-directory: AWS-IAAC/**'
+        working-directory: AWS-IAAC
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: AWS-IAAC/**'
+        working-directory: AWS-IAAC
 
       - name: Terraform Plan
         run: terraform plan
-        working-directory: AWS-IAAC/**'
+        working-directory: AWS-IAAC
 
       - name: Terraform apply
         if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
-        working-directory: AWS-IAAC/**'
+        working-directory: AWS-IAAC
