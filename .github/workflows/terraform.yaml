@@ -46,9 +46,16 @@ jobs:
         with:
           role-to-assume: ${{ secrets.SECRETS_ROLE_TO_ASSUME }}
           aws-region: us-east-1
-          # --- FIX IS HERE ---
-          role-session-name: GitHubActions-${{ replace(matrix.tf_folder, '/', '-') }} # Corrected: Replaced '/' with '-'
-          # --- END FIX ---
+          # Use the environment variable set in the 'run' script below
+          role-session-name: ${{ env.CLEANED_SESSION_NAME }}
+          audience: sts.amazonaws.com
+        env: # Define an environment variable specifically for this step's script
+          RAW_TF_FOLDER: ${{ matrix.tf_folder }} # Pass the matrix variable to the script
+        run: | # This script will execute on the runner
+          # Use 'tr' command to replace all '/' characters with '-'
+           CLEANED_NAME=$(echo "${{ env.RAW_TF_FOLDER }}" | tr '/' '-')
+          # Set the environment variable for subsequent steps in this job
+          echo "CLEANED_SESSION_NAME=GitHubActions-${CLEANED_NAME}" >> $GITHUB_ENV
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
