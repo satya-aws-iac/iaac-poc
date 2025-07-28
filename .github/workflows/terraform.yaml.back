@@ -1,0 +1,82 @@
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'terraform/**'
+      - '.github/workflows/terraform.yaml'
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'terraform/**'
+      - '.github/workflows/terraform.yaml'
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+
+    # Define the matrix
+    strategy:
+      fail-fast: false # Allows other matrix jobs to continue even if one fails
+      matrix:
+        # Define the paths to your Terraform root modules
+        # Replace these with your actual folder paths
+        tf_folder:
+          - terraform/iam
+          - terraform/network
+          - terraform/database # Example: another folder
+          - terraform/compute  # Example: another folder
+
+    # The job name will include the folder, e.g., "terraform / terraform/iam"
+    name: Terraform (${{ matrix.tf_folder }})
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.SECRETS_ROLE_TO_ASSUME }}
+          aws-region: us-east-1
+          # Use the environment variable set in the 'run' script below
+          role-session-name: ${{ env.CLEANED_SESSION_NAME }}
+          audience: sts.amazonaws.com
+        env: # Define an environment variable specifically for this step's script
+          RAW_TF_FOLDER: ${{ matrix.tf_folder }} # Pass the matrix variable to the script
+        run: | # This script will execute on the runner
+          # Use 'tr' command to replace all '/' characters with '-'
+           CLEANED_NAME=$(echo "${{ env.RAW_TF_FOLDER }}" | tr '/' '-')
+          # Set the environment variable for subsequent steps in this job
+          echo "CLEANED_SESSION_NAME=GitHubActions-${CLEANED_NAME}" >> $GITHUB_ENV
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ${{ matrix.tf_folder }}
+
+      - name: Terraform Format
+        run: terraform fmt -check
+        working-directory: ${{ matrix.tf_folder }}
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ${{ matrix.tf_folder }}
+
+      - name: Terraform Plan
+        run: terraform plan -no-color -input=false
+        working-directory: ${{ matrix.tf_folder }}
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve -input=false
+        working-directory: ${{ matrix.tf_folder }}

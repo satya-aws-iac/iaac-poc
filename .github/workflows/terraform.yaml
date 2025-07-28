@@ -1,15 +1,9 @@
 on:
   push:
-    branches:
-      - main
-      - develop
     paths:
       - 'terraform/**'
       - '.github/workflows/terraform.yaml'
   pull_request:
-    branches:
-      - main
-      - develop
     paths:
       - 'terraform/**'
       - '.github/workflows/terraform.yaml'
@@ -17,66 +11,49 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+
     permissions:
-      id-token: write
-      contents: read
-      pull-requests: write
+      id-token: write # Required for OIDC authentication JWT
+      contents: read # Required for checking out the repository
+      pull-requests: write # Required for PR checks
 
-    # Define the matrix
-    strategy:
-      fail-fast: false # Allows other matrix jobs to continue even if one fails
-      matrix:
-        # Define the paths to your Terraform root modules
-        # Replace these with your actual folder paths
-        tf_folder:
-          - terraform/iam
-          - terraform/network
-          - terraform/database # Example: another folder
-          - terraform/compute  # Example: another folder
-
-    # The job name will include the folder, e.g., "terraform / terraform/iam"
-    name: Terraform (${{ matrix.tf_folder }})
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Already using v4, which is good
 
       - name: Configure AWS credentials (OIDC)
+        # --- CHANGE HERE: Update to v4 ---
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.SECRETS_ROLE_TO_ASSUME }}
-          aws-region: us-east-1
-          # Use the environment variable set in the 'run' script below
-          role-session-name: ${{ env.CLEANED_SESSION_NAME }}
-          audience: sts.amazonaws.com
-        env: # Define an environment variable specifically for this step's script
-          RAW_TF_FOLDER: ${{ matrix.tf_folder }} # Pass the matrix variable to the script
-        run: | # This script will execute on the runner
-          # Use 'tr' command to replace all '/' characters with '-'
-           CLEANED_NAME=$(echo "${{ env.RAW_TF_FOLDER }}" | tr '/' '-')
-          # Set the environment variable for subsequent steps in this job
-          echo "CLEANED_SESSION_NAME=GitHubActions-${CLEANED_NAME}" >> $GITHUB_ENV
+          role-to-assume: ${{ secrets.SECRETS_ROLE_TO_ASSUME }} # I have set this in the repository secrets
+          aws-region: us-east-1 # AWS region to use
+          role-session-name: GitHubActions # Name for the session
+          audience: sts.amazonaws.com # Audience for OIDC authentication
 
       - name: Setup Terraform
+        # --- CHANGE HERE: Ensure you're on the latest patch of v3, or consider v4 if available and compatible ---
+        # As of my last update, v3 is still the latest major for setup-terraform.
+        # Ensure your 'v3' tag pulls the latest patch.
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ${{ matrix.tf_folder }}
+        working-directory: terraform
 
       - name: Terraform Format
         run: terraform fmt -check
-        working-directory: ${{ matrix.tf_folder }}
+        working-directory: terraform
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ${{ matrix.tf_folder }}
+        working-directory: terraform
 
       - name: Terraform Plan
-        run: terraform plan -no-color -input=false
-        working-directory: ${{ matrix.tf_folder }}
+        run: terraform plan
+        working-directory: terraform
 
-      - name: Terraform Apply
+      - name: Terraform apply
         if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve -input=false
-        working-directory: ${{ matrix.tf_folder }}
+        run: terraform apply -auto-approve
+        working-directory: terraform
