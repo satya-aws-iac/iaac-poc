@@ -41,14 +41,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # --- THIS IS THE CORRECTED STEP ---
       - name: Configure AWS credentials (OIDC)
+        # This step now uses a 'run' block to prepare the role-session-name
+        # as a workaround for the 'replace' function not being recognized.
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.SECRETS_ROLE_TO_ASSUME }}
           aws-region: us-east-1
-          # --- FIX IS HERE ---
-          role-session-name: GitHubActions-${{ replace(matrix.tf_folder, '/', '-') }} # Corrected: Replaced '/' with '-'
-          # --- END FIX ---
+          # Use the environment variable set in the 'run' script below
+          role-session-name: ${{ env.CLEANED_SESSION_NAME }}
+          audience: sts.amazonaws.com
+        env: # Define an environment variable specifically for this step's script
+          RAW_TF_FOLDER: ${{ matrix.tf_folder }} # Pass the matrix variable to the script
+        run: | # This script will execute on the runner
+          # Use 'tr' command to replace all '/' characters with '-'
+          CLEANED_NAME=$(echo "${{ env.RAW_TF_FOLDER }}" | tr '/' '-')
+          # Set the environment variable for subsequent steps in this job
+          # The "GitHubActions-" prefix is added here.
+          echo "CLEANED_SESSION_NAME=GitHubActions-${CLEANED_NAME}" >> $GITHUB_ENV
+      # --- END OF CORRECTED STEP ---
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
