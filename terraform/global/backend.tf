@@ -1,7 +1,4 @@
-# Configure the AWS provider
-provider "aws" {
-  region = "us-east-1" # You can change this to your desired AWS region
-}
+
 
 #IMPORTANT: Configure the S3 backend for Terraform state
 # This tells Terraform to store its state file in the S3 bucket created below.
