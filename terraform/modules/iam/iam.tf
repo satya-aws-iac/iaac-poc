@@ -1,6 +1,6 @@
 # Create an IAM user named "sample"
-resource "aws_iam_user" "sample_user" {
-  name = "sany"
+resource "aws_iam_user" "QA" {
+  name = "Ashish-Garg"
   tags = {
     Environment = "Development"
     Project     = "TerraformUserManagement"
