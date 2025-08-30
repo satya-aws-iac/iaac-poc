@@ -15,3 +15,4 @@ global_tags = {
   Environment = "dev"
   Owner       = "DevOps"
 }
+
