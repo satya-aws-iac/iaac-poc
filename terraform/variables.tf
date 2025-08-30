@@ -1,7 +1,7 @@
 variable "namespace" {
   description = "The namespace for all resources"
   type        = string
-
+  default     = "default"
 }
 
 variable "global_tags" {
