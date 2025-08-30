@@ -6,3 +6,6 @@ resource "aws_iam_user" "QA" {
     Project     = "TerraformUserManagement"
   }
 }
+
+#crate vpc subnets
+
