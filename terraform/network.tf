@@ -21,6 +21,18 @@ module "vpc" {
     "${var.vpc_cidr_prefix}.10.0/24"
   ]
 
+ # Subnet Names
+  data_subnet_names = [
+    "${var.environment}-data-subnet-1",
+    "${var.environment}-data-subnet-2"
+  ]
+
+  private_subnet_names = [
+    "${var.environment}-private-subnet-1",
+    "${var.environment}-private-subnet-2",
+    "${var.environment}-private-subnet-3"
+  ]
+
   # Availability Zones
   availability_zones = slice(var.aws_azs, 0, 3)
 
