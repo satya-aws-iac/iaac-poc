@@ -21,7 +21,7 @@ module "vpc" {
     "${var.vpc_cidr_prefix}.10.0/24"
   ]
 
- # Subnet Names
+  # Subnet Names
   data_subnet_names = [
     "${var.environment}-data-subnet-1",
     "${var.environment}-data-subnet-2"
