@@ -11,14 +11,14 @@ module "vpc" {
 
   # Subnet Configuration
   data_subnet_cidrs = [
-    "${var.vpc_cidr_prefix}.1.0/24",
-    "${var.vpc_cidr_prefix}.2.0/24"
+    "${var.vpc_cidr_prefix}.6.0/24",
+    "${var.vpc_cidr_prefix}.7.0/24"
   ]
 
   private_subnet_cidrs = [
-    "${var.vpc_cidr_prefix}.3.0/24",
-    "${var.vpc_cidr_prefix}.4.0/24",
-    "${var.vpc_cidr_prefix}.5.0/24"
+    "${var.vpc_cidr_prefix}.8.0/24",
+    "${var.vpc_cidr_prefix}.9.0/24",
+    "${var.vpc_cidr_prefix}.10.0/24"
   ]
 
   # Availability Zones
