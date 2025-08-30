@@ -50,4 +50,3 @@ variable "vpc_cidr_prefix" {
   type        = string
   default     = "10.0"
 }
-
