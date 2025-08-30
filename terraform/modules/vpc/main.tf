@@ -11,7 +11,7 @@ resource "aws_vpc" "main" {
   )
 }
 
-# Create public subnets
+# Create public subnet
 resource "aws_subnet" "public" {
   count             = length(var.public_subnet_cidrs)
   vpc_id            = aws_vpc.main.id

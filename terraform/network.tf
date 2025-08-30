@@ -1,25 +1,29 @@
+################################################################################
+# VPC Module
+################################################################################
+
 module "vpc" {
   source = "./modules/vpc"
 
+  # VPC Configuration
   vpc_cidr    = var.vpc_cidr
   environment = var.environment
 
-  # Define public subnets CIDR blocks
+  # Subnet Configuration
   public_subnet_cidrs = [
     "${var.vpc_cidr_prefix}.1.0/24",
     "${var.vpc_cidr_prefix}.2.0/24"
-    
   ]
 
-  # Define private subnets CIDR blocks
   private_subnet_cidrs = [
     "${var.vpc_cidr_prefix}.3.0/24",
     "${var.vpc_cidr_prefix}.4.0/24"
   ]
 
-  # Define availability zones
+  # Availability Zones
   availability_zones = slice(var.aws_azs, 0, 2)
 
+  # Resource Tags
   tags = merge(
     {
       Name        = var.vpc_name
