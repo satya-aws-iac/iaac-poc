@@ -5,21 +5,21 @@ graph TB
     %% VPC Definition
     VPC[VPC<br/>10.0.0.0/16] --> IGW[Internet Gateway]
     
-    %% Public Subnets
-    VPC --> PublicSubnet1[Public Subnet 1<br/>10.0.1.0/24<br/>us-east-1a]
-    VPC --> PublicSubnet2[Public Subnet 2<br/>10.0.2.0/24<br/>us-east-1b]
+    %% data Subnets
+    VPC --> dataSubnet1[data Subnet 1<br/>10.0.1.0/24<br/>us-east-1a]
+    VPC --> dataSubnet2[data Subnet 2<br/>10.0.2.0/24<br/>us-east-1b]
     
     %% Private Subnets
     VPC --> PrivateSubnet1[Private Subnet 1<br/>10.0.3.0/24<br/>us-east-1a]
     VPC --> PrivateSubnet2[Private Subnet 2<br/>10.0.4.0/24<br/>us-east-1b]
     
     %% Route Tables and Internet Gateway
-    IGW --> PublicRT[Public Route Table]
-    PublicRT --> PublicSubnet1
-    PublicRT --> PublicSubnet2
+    IGW --> dataRT[data Route Table]
+    dataRT --> dataSubnet1
+    dataRT --> dataSubnet2
     
     %% NAT Gateway and Private Routes
-    PublicSubnet1 --> NAT[NAT Gateway]
+    dataSubnet1 --> NAT[NAT Gateway]
     NAT --> PrivateRT[Private Route Table]
     PrivateRT --> PrivateSubnet1
     PrivateRT --> PrivateSubnet2
@@ -31,9 +31,9 @@ graph TB
     classDef routeTable fill:#dfd,stroke:#333,stroke-width:1px
     
     class VPC vpc
-    class PublicSubnet1,PublicSubnet2,PrivateSubnet1,PrivateSubnet2 subnet
+    class dataSubnet1,dataSubnet2,PrivateSubnet1,PrivateSubnet2 subnet
     class IGW,NAT gateway
-    class PublicRT,PrivateRT routeTable
+    class dataRT,PrivateRT routeTable
 ```
 
 ## Infrastructure Components
@@ -44,9 +44,9 @@ graph TB
 - Environment: dev
 
 ### Networking Components
-1. **Public Subnets**
-   - Public Subnet 1: 10.0.1.0/24 (us-east-1a)
-   - Public Subnet 2: 10.0.2.0/24 (us-east-1b)
+1. **data Subnets**
+   - data Subnet 1: 10.0.1.0/24 (us-east-1a)
+   - data Subnet 2: 10.0.2.0/24 (us-east-1b)
 
 2. **Private Subnets**
    - Private Subnet 1: 10.0.3.0/24 (us-east-1a)
@@ -54,14 +54,14 @@ graph TB
 
 3. **Gateways**
    - Internet Gateway: Attached to VPC
-   - NAT Gateway: Located in Public Subnet 1
+   - NAT Gateway: Located in data Subnet 1
 
 4. **Routing**
-   - Public Route Table: Routes traffic through Internet Gateway
+   - data Route Table: Routes traffic through Internet Gateway
    - Private Route Table: Routes traffic through NAT Gateway
 
 ### Security and Access
-- Public subnets have direct internet access
+- data subnets have direct internet access
 - Private subnets access internet via NAT Gateway
 - NAT Gateway provides outbound-only internet access for private subnets
 

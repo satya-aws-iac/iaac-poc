@@ -10,7 +10,7 @@ module "vpc" {
   environment = var.environment
 
   # Subnet Configuration
-  public_subnet_cidrs = [
+  data_subnet_cidrs = [
     "${var.vpc_cidr_prefix}.1.0/24",
     "${var.vpc_cidr_prefix}.2.0/24"
   ]

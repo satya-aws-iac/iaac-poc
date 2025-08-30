@@ -11,18 +11,18 @@ resource "aws_vpc" "main" {
   )
 }
 
-# Create public subnet
-resource "aws_subnet" "public" {
-  count             = length(var.public_subnet_cidrs)
+# Create data subnet
+resource "aws_subnet" "data" {
+  count             = length(var.data_subnet_cidrs)
   vpc_id            = aws_vpc.main.id
-  cidr_block        = var.public_subnet_cidrs[count.index]
+  cidr_block        = var.data_subnet_cidrs[count.index]
   availability_zone = var.availability_zones[count.index]
 
-  map_public_ip_on_launch = true
+  map_data_ip_on_launch = true
 
   tags = merge(
     {
-      Name = "${var.environment}-public-subnet-${count.index + 1}"
+      Name = "${var.environment}-data-subnet-${count.index + 1}"
     },
     var.tags
   )
@@ -55,8 +55,8 @@ resource "aws_internet_gateway" "main" {
   )
 }
 
-# Route table for public subnets
-resource "aws_route_table" "public" {
+# Route table for data subnets
+resource "aws_route_table" "data" {
   vpc_id = aws_vpc.main.id
 
   route {
@@ -66,7 +66,7 @@ resource "aws_route_table" "public" {
 
   tags = merge(
     {
-      Name = "${var.environment}-public-rt"
+      Name = "${var.environment}-data-rt"
     },
     var.tags
   )
@@ -85,11 +85,11 @@ resource "aws_route_table" "private" {
   )
 }
 
-# Associate public subnets with public route table
-resource "aws_route_table_association" "public" {
-  count          = length(var.public_subnet_cidrs)
-  subnet_id      = aws_subnet.public[count.index].id
-  route_table_id = aws_route_table.public.id
+# Associate data subnets with data route table
+resource "aws_route_table_association" "data" {
+  count          = length(var.data_subnet_cidrs)
+  subnet_id      = aws_subnet.data[count.index].id
+  route_table_id = aws_route_table.data.id
 }
 
 # Associate private subnets with private route table

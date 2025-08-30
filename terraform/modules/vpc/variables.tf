@@ -8,8 +8,8 @@ variable "environment" {
   type        = string
 }
 
-variable "public_subnet_cidrs" {
-  description = "List of CIDR blocks for public subnets"
+variable "data_subnet_cidrs" {
+  description = "List of CIDR blocks for data subnets"
   type        = list(string)
 }
 
