@@ -1,5 +1,5 @@
-# Current AWS Infrastructure Diagram
-
+# Current AWS Infrastructure Diagram vpc
+ 
 ```mermaid
 graph TB
     %% VPC Definition with DNS enabled
@@ -22,8 +22,8 @@ graph TB
     end
 
     %% Route Tables
-    DataRT[Data Route Table<br/>${environment}-data-rt]
-    PrivateRT[Private Route Table<br/>${environment}-private-rt]
+    DataRT[Data Route Table<br/>dev-data-rt]
+    PrivateRT[Private Route Table<br/>dev-private-rt]
 
     %% VPC Connections
     VPC --> DS1
@@ -101,7 +101,7 @@ graph TB
 
 ### Resource Tags
 All resources are tagged with:
-- Name: Resource-specific naming (e.g., ${environment}-vpc)
-- Environment: ${var.environment}
+- Name: Resource-specific naming (e.g., dev-vpc)
+- Environment: dev
 - Terraform: "true"
-- Additional tags from var.global_tags
+- Additional tags from global_tags
