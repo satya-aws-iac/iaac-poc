@@ -18,7 +18,7 @@ resource "aws_subnet" "data" {
   cidr_block        = var.data_subnet_cidrs[count.index]
   availability_zone = var.availability_zones[count.index]
 
-  map_data_ip_on_launch = true
+
 
   tags = merge(
     {
