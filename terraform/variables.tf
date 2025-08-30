@@ -31,11 +31,7 @@ variable "vpc_name" {
   default     = "dev-vpc"
 }
 
-variable "vpc_cidr" {
-  description = "The CIDR block for the VPC"
-  type        = string
-  default     = "10.0.0.0/16"
-}
+
 
 variable "aws_azs" {
   description = "A list of availability zones for the VPC"
@@ -55,8 +51,3 @@ variable "vpc_cidr_prefix" {
   default     = "10.0"
 }
 
-variable "additional_tags" {
-  description = "Additional tags to add to all resources"
-  type        = map(string)
-  default     = {}
-}
