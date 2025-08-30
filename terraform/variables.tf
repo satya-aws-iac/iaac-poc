@@ -28,6 +28,7 @@ variable "region_secondary" {
 variable "vpc_name" {
   description = "The name of the VPC"
   type        = string
+  default     = "dev-vpc"
 }
 
 variable "vpc_cidr" {
