@@ -11,9 +11,10 @@ module "vpc" {
 
   # Subnet Configuration
   data_subnet_cidrs = [
+    "${var.vpc_cidr_prefix}.5.0/24",
     "${var.vpc_cidr_prefix}.6.0/24",
-    "${var.vpc_cidr_prefix}.7.0/24",
-    "${var.vpc_cidr_prefix}.5.0/24"
+    "${var.vpc_cidr_prefix}.7.0/24"
+   
   ]
 
   private_subnet_cidrs = [
