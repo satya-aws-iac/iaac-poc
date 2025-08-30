@@ -7,6 +7,7 @@ variable "namespace" {
 variable "global_tags" {
   description = "A map of tags to apply to all resources"
   type        = map(any)
+  default     = {}
 }
 
 variable "region" {
