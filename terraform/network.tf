@@ -17,11 +17,12 @@ module "vpc" {
 
   private_subnet_cidrs = [
     "${var.vpc_cidr_prefix}.3.0/24",
-    "${var.vpc_cidr_prefix}.4.0/24"
+    "${var.vpc_cidr_prefix}.4.0/24",
+    "${var.vpc_cidr_prefix}.5.0/24"
   ]
 
   # Availability Zones
-  availability_zones = slice(var.aws_azs, 0, 2)
+  availability_zones = slice(var.aws_azs, 0, 3)
 
   # Resource Tags
   tags = merge(
