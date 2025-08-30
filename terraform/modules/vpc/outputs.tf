@@ -17,8 +17,3 @@ output "vpc_cidr_block" {
   description = "The CIDR block of the VPC"
   value       = aws_vpc.main.cidr_block
 }
-
-output "nat_gateway_ip" {
-  description = "The public IP address of the NAT Gateway"
-  value       = length(aws_eip.nat) > 0 ? aws_eip.nat[0].public_ip : null
-}
