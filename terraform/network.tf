@@ -8,6 +8,7 @@ module "vpc" {
   public_subnet_cidrs = [
     "${var.vpc_cidr_prefix}.1.0/24",
     "${var.vpc_cidr_prefix}.2.0/24"
+    
   ]
 
   # Define private subnets CIDR blocks
