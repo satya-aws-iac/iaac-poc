@@ -41,26 +41,12 @@ resource "aws_subnet" "private" {
   )
 }
 
-# Internet Gateway
-resource "aws_internet_gateway" "main" {
-  vpc_id = aws_vpc.main.id
 
-  tags = merge(
-    {
-      Name = "${var.environment}-igw"
-    },
-    var.tags
-  )
-}
 
 # Route table for data subnets
 resource "aws_route_table" "data" {
   vpc_id = aws_vpc.main.id
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.main.id
-  }
+  count  = length(var.data_subnet_cidrs) > 0 ? 1 : 0
 
   tags = merge(
     {
