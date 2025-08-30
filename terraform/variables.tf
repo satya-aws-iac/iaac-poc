@@ -42,3 +42,21 @@ variable "aws_azs" {
   type        = list(string)
   default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
 }
+
+variable "environment" {
+  description = "Environment name (e.g., dev, staging, prod)"
+  type        = string
+  default     = "dev"
+}
+
+variable "vpc_cidr_prefix" {
+  description = "CIDR prefix for subnets (e.g., 10.0 for a VPC with CIDR 10.0.0.0/16)"
+  type        = string
+  default     = "10.0"
+}
+
+variable "additional_tags" {
+  description = "Additional tags to add to all resources"
+  type        = map(string)
+  default     = {}
+}
