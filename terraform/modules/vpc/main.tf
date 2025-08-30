@@ -66,7 +66,7 @@ resource "aws_internet_gateway" "main" {
 #     },
 #     var.tags
 #   )
-}
+#}
 
 # NAT Gateway
 # resource "aws_nat_gateway" "main" {
