@@ -5,7 +5,7 @@ on:
       - '.github/workflows/terraform.yaml'
   pull_request:
     paths:
-      - 'terraform/**'
+      - 'basement/**'
       - '.github/workflows/terraform.yaml'
 
 jobs:
