@@ -1,7 +1,7 @@
 on:
   push:
     paths:
-      - 'terraform/**'
+      - 'basement/**'
       - '.github/workflows/terraform.yaml'
   pull_request:
     paths:
