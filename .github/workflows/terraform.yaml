@@ -58,6 +58,11 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: basement
 
+      - name: Terraform Destroy
+        if: github.ref == 'refs/heads/main'
+        run: terraform destroy -auto-approve
+        working-directory: basement
+
    
 
   
